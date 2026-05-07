@@ -152,4 +152,4 @@ La API retorna errores estructurados:
 
 ## 👤 Autor
 
-Desarrollado como portafolio del bootcamp **DIO - Santander Dev Week 2023**
+Desarrollado como portafolio del bootcamp **DIO - Santander Dev Week 2026**

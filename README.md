@@ -1,16 +1,16 @@
 # 📊 API Sistema Contable
 
-API REST para gestión contable con soporte de **partida doble**, desarrollada como proyecto de portafolio del bootcamp DIO / Santander Dev Week 2023.
+API REST corporativa para gestión contable con soporte de **partida doble**, desarrollada como proyecto independiente de portafolio.
 
 ## 🛠️ Tecnologías
 
 | Tecnología | Versión |
 |-----------|---------|
 | Java | 17 (LTS) |
-| Spring Boot | 3.2.5 |
-| Spring Data JPA | - |
-| PostgreSQL | - |
-| Lombok | - |
+| Spring Boot | 3.5.14 |
+| Spring Data JPA | En pom |
+| PostgreSQL | 16+ |
+| Lombok | En pom |
 | SpringDoc OpenAPI | 2.5.0 |
 
 ---
@@ -18,6 +18,7 @@ API REST para gestión contable con soporte de **partida doble**, desarrollada c
 ## 📐 Arquitectura del Dominio
 
 El sistema implementa el modelo contable de **partida doble**:
+
 
 ```
 Cuenta Contable
@@ -63,46 +64,23 @@ Asiento Contable
 
 ### Requisitos
 - Java 17+
-- Maven 3.8+
 - PostgreSQL corriendo en `localhost:5432`
 
-### Pasos
+### Pasos de Configuración
 
-```bash
-# 1. Clonar el repositorio
-git clone https://github.com/tu-usuario/contabilidad-api.git
-cd contabilidad-api
+1. Crear la base de datos vacía en PostgreSQL mediante pgAdmin 4 con el nombre exacto: `contabilidad_db`.
+2. Configurar sus credenciales locales en el archivo `src/main/resources/application.properties`.
 
-# 2. Crear base de datos en PostgreSQL
-createdb contabilidad_db
+### Inicialización en Visual Studio Code
+Para arrancar el sistema de forma visual y gratuita sin escribir comandos de consola:
+1. Instale la extensión **Spring Boot Extension Pack** desde el mercado de VS Code.
+2. Diríjase a la barra lateral izquierda y haga clic en la herramienta **SPRING BOOT DASHBOARD** (icono de enchufe/hoja).
+3. En la sección superior `APPS`, localice el proyecto `contabilidad-api`.
+4. Haga clic izquierdo en el **icono de reproducción (triángulo verde hacia la derecha)** para encender el servidor.
 
-# 3. Ejecutar
-mvn spring-boot:run
-```
-
-La API estará disponible en: `http://localhost:8080`
+La API estará disponible en de inmediato en: `http://localhost:8080`
 
 **Swagger UI:** `http://localhost:8080/swagger-ui.html`
-
----
-
-## ☁️ Despliegue en Railway
-
-### Variables de entorno requeridas en Railway:
-
-| Variable | Valor |
-|----------|-------|
-| `DATABASE_URL` | `jdbc:postgresql://<host>:<port>/<db>` |
-| `DATABASE_USERNAME` | usuario de PostgreSQL |
-| `DATABASE_PASSWORD` | contraseña de PostgreSQL |
-| `SPRING_PROFILES_ACTIVE` | `prod` |
-
-### Pasos Railway:
-1. Crear proyecto en [railway.app](https://railway.app)
-2. Agregar servicio **PostgreSQL**
-3. Conectar repositorio GitHub
-4. Configurar las variables de entorno arriba indicadas
-5. Deploy automático 🎉
 
 ---
 
@@ -123,7 +101,7 @@ POST /api/cuentas
 ```json
 POST /api/asientos
 {
-  "fecha": "2024-01-15",
+  "fecha": "2026-05-12",
   "descripcion": "Venta al contado",
   "referencia": "FAC-001",
   "lineas": [
@@ -144,7 +122,7 @@ La API retorna errores estructurados:
   "status": 400,
   "mensaje": "El asiento no está balanceado. Débitos: 1000.00 | Créditos: 800.00",
   "errores": null,
-  "timestamp": "2024-01-15T10:30:00"
+  "timestamp": "2026-05-12T10:30:00"
 }
 ```
 
@@ -152,4 +130,4 @@ La API retorna errores estructurados:
 
 ## 👤 Autor
 
-Desarrollado como portafolio del bootcamp **DIO - Santander Dev Week 2023**
+Desarrollado de forma independiente por **asaldanadev**.

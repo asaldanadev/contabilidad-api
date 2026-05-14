@@ -1,113 +1,77 @@
-# 📊 API Sistema Contable
+# Sistema Contable API
 
-API REST corporativa para gestión contable con soporte de **partida doble**, desarrollada como proyecto independiente de portafolio.
+API REST para gestión contable con soporte de partida doble.
 
-## 🛠️ Tecnologías
+## Stack
 
 | Tecnología | Versión |
-|-----------|---------|
-| Java | 17 (LTS) |
+|---|---|
+| Java | 17 |
 | Spring Boot | 3.5.14 |
-| Spring Data JPA | En pom |
 | PostgreSQL | 16+ |
-| Lombok | En pom |
-| SpringDoc OpenAPI | 2.5.0 |
+| SpringDoc OpenAPI | 2.8.9 |
 
----
-
-## 📐 Arquitectura del Dominio
-
-El sistema implementa el modelo contable de **partida doble**:
-
+## Modelo de dominio
 
 ```
-Cuenta Contable
-  └── Tipos: ACTIVO | PASIVO | PATRIMONIO | INGRESO | GASTO
-
-Asiento Contable
-  ├── Estado: BORRADOR → CONFIRMADO / ANULADO
-  └── Líneas de Asiento
-        ├── Tipo: DÉBITO
-        └── Tipo: CRÉDITO
-        ⚡ Regla: Total DÉBITOS == Total CRÉDITOS
+Cuenta (ACTIVO | PASIVO | PATRIMONIO | INGRESO | GASTO)
+Asiento (BORRADOR → CONFIRMADO | ANULADO)
+└── Líneas (DÉBITO / CRÉDITO) — suma DÉBITOS == suma CRÉDITOS
 ```
 
----
+## Endpoints
 
-## 🚀 Endpoints
+### Cuentas `/api/cuentas`
 
-### Cuentas Contables `/api/cuentas`
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/` | Listar todas |
+| GET | `/activas` | Solo activas |
+| GET | `/tipo/{tipo}` | Filtrar por tipo |
+| GET | `/{id}` | Buscar por ID |
+| POST | `/` | Crear |
+| PUT | `/{id}` | Actualizar |
+| DELETE | `/{id}` | Desactivar |
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/api/cuentas` | Listar todas las cuentas |
-| GET | `/api/cuentas/activas` | Listar cuentas activas |
-| GET | `/api/cuentas/tipo/{tipo}` | Filtrar por tipo |
-| GET | `/api/cuentas/{id}` | Buscar por ID |
-| POST | `/api/cuentas` | Crear cuenta |
-| PUT | `/api/cuentas/{id}` | Actualizar cuenta |
-| DELETE | `/api/cuentas/{id}` | Desactivar cuenta |
+### Asientos `/api/asientos`
 
-### Asientos Contables `/api/asientos`
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/` | Listar todos |
+| GET | `/{id}` | Buscar por ID |
+| POST | `/` | Crear (valida partida doble) |
+| PATCH | `/{id}/confirmar` | Confirmar |
+| PATCH | `/{id}/anular` | Anular |
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/api/asientos` | Listar todos los asientos |
-| GET | `/api/asientos/{id}` | Buscar por ID |
-| POST | `/api/asientos` | Crear asiento (valida partida doble) |
-| PATCH | `/api/asientos/{id}/confirmar` | Confirmar y actualizar saldos |
-| PATCH | `/api/asientos/{id}/anular` | Anular asiento |
+## Ejecución local
 
----
+**Requisitos:** Java 17+, PostgreSQL 16+
 
-## ☁️ Despliegue en la Nube (Demo en Producción)
+1. Crear base de datos `contabilidad_db` en PostgreSQL
+2. Configurar variables de entorno:
 
-El backend de la aplicación y la base de datos se encuentran alojados de forma continua en la infraestructura de **Render**. Puedes interactuar y realizar peticiones directamente a la API en producción sin necesidad de configuraciones locales.
-
-*   **Swagger UI (Demo Interactiva):** [https://onrender.com](https://onrender.com)
-
-> ⚠️ **Nota de la capa gratuita:** Debido a las políticas de suspensión de Render, el primer acceso del día puede experimentar un retraso de aproximadamente 50 segundos mientras el servidor web se activa de su estado de reposo.
-
----
-
-## 💻 Ejecución Local
-
-### Requisitos
-- Java 17+
-- PostgreSQL corriendo en `localhost:5432`
-
-### Pasos de Configuración
-
-1. Crear la base de datos vacía en PostgreSQL mediante pgAdmin 4 con el nombre exacto: `contabilidad_db`.
-2. Configurar sus credenciales locales en el archivo `src/main/resources/application.properties`.
-
-### Inicialización en Visual Studio Code
-Para arrancar el sistema de forma visual y gratuita sin escribir comandos de consola:
-1. Instale la extensión **Spring Boot Extension Pack** desde el mercado de VS Code.
-2. Diríjase a la barra lateral izquierda y haga clic en la herramienta **SPRING BOOT DASHBOARD** (icono de enchufe/hoja).
-3. En la sección superior `APPS`, localice el proyecto `contabilidad-api`.
-4. Haga clic izquierdo en el **icono de reproducción (triángulo verde hacia la derecha)** para encender el servidor.
-
-La API estará disponible en de inmediato en: `http://localhost:8080`
-
-**Swagger UI:** `http://localhost:8080/swagger-ui.html`
-
----
-
-## 📋 Ejemplo de uso
-
-### Crear una cuenta
-```json
-POST /api/cuentas
-{
-  "codigo": "1001",
-  "nombre": "Caja",
-  "descripcion": "Efectivo disponible",
-  "tipo": "ACTIVO"
-}
+```bash
+SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/contabilidad_db
+SPRING_DATASOURCE_USERNAME=postgres
+SPRING_DATASOURCE_PASSWORD=tu_password
 ```
 
-### Crear un asiento (con partida doble)
+3. Ejecutar:
+
+```bash
+./mvnw spring-boot:run
+```
+
+Swagger UI disponible en `http://localhost:8080/swagger-ui.html`
+
+## Demo
+
+API desplegada en Render (free tier — primer request puede tardar ~50s):
+
+- Swagger UI: `https://contabilidad-api-5hi2.onrender.com/swagger-ui/index.html`
+
+## Ejemplo de uso
+
 ```json
 POST /api/asientos
 {
@@ -115,29 +79,12 @@ POST /api/asientos
   "descripcion": "Venta al contado",
   "referencia": "FAC-001",
   "lineas": [
-    { "cuentaId": 1, "tipo": "DEBITO",  "monto": 1000.00, "descripcion": "Cobro en caja" },
-    { "cuentaId": 2, "tipo": "CREDITO", "monto": 1000.00, "descripcion": "Ingreso por ventas" }
+    { "cuentaId": 1, "tipo": "DEBITO",  "monto": 1000.00 },
+    { "cuentaId": 2, "tipo": "CREDITO", "monto": 1000.00 }
   ]
 }
 ```
 
----
+## Autor
 
-## ⚠️ Manejo de Errores
-
-La API retorna errores estructurados:
-
-```json
-{
-  "status": 400,
-  "mensaje": "El asiento no está balanceado. Débitos: 1000.00 | Créditos: 800.00",
-  "errores": null,
-  "timestamp": "2026-05-12T10:30:00"
-}
-```
-
----
-
-## 👤 Autor
-
-Desarrollado de forma independiente por **asaldanadev**.
+[asaldanadev](https://github.com/asaldanadev)

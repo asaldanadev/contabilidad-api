@@ -60,6 +60,16 @@ Asiento Contable
 
 ---
 
+## ☁️ Despliegue en la Nube (Demo en Producción)
+
+El backend de la aplicación y la base de datos se encuentran alojados de forma continua en la infraestructura de **Render**. Puedes interactuar y realizar peticiones directamente a la API en producción sin necesidad de configuraciones locales.
+
+*   **Swagger UI (Demo Interactiva):** [https://onrender.com](https://onrender.com)
+
+> ⚠️ **Nota de la capa gratuita:** Debido a las políticas de suspensión de Render, el primer acceso del día puede experimentar un retraso de aproximadamente 50 segundos mientras el servidor web se activa de su estado de reposo.
+
+---
+
 ## 💻 Ejecución Local
 
 ### Requisitos
